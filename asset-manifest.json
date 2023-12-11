@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/puzzers/static/css/main.86ec409e.css",
+    "main.js": "/puzzers/static/js/main.fbb38f19.js",
+    "static/js/787.fbbee305.chunk.js": "/puzzers/static/js/787.fbbee305.chunk.js",
+    "static/media/logo.svg": "/puzzers/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "/puzzers/index.html",
+    "main.86ec409e.css.map": "/puzzers/static/css/main.86ec409e.css.map",
+    "main.fbb38f19.js.map": "/puzzers/static/js/main.fbb38f19.js.map",
+    "787.fbbee305.chunk.js.map": "/puzzers/static/js/787.fbbee305.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.86ec409e.css",
+    "static/js/main.fbb38f19.js"
+  ]
+}
