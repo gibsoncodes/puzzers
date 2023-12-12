@@ -123,7 +123,13 @@ const GameStructure = () => {
   const [stateStack, setStateStack] = useState([{lastDir: "null", sprite: {origin: [0,0], points: [[0,0]], branches: {tl: [], t: [], tr: [], b: []}}, envObjects: {grows: grows, blocks: blocks}}])
 
 
-  useEffect(() => {
+// Function to move the object
+// const positionSprite = (newX, newY) => {
+//   setPosition({ x: newX, y: newY });
+// };
+
+// Calculate position for CSS
+useEffect(() => {
     setLastDir("null")
     setWinState("idle")
     setAddStack("false")
@@ -132,15 +138,7 @@ const GameStructure = () => {
     setSprite({...levels[level - 1].sprite})
     setEnvObjects({...levels[level - 1].envObjects})
     setStateStack([{lastDir: "null", sprite: {origin: [0,0], points: [[0,0]], branches: {tl: [], t: [], tr: [], b: []}}, envObjects: {grows: grows, blocks: blocks}}])
-  }, [level])
-
-// Function to move the object
-// const positionSprite = (newX, newY) => {
-//   setPosition({ x: newX, y: newY });
-// };
-
-// Calculate position for CSS
-
+}, [level])
 
 // useEffect(() => {
 //     console.log(stateStack.length, stateStack);
@@ -235,6 +233,9 @@ const translatePoints = (origin, points) => {
         }
         if (jawn[e.key] === badDir) return;
         switch(e.key) {
+            case 'r':
+                handleRestart();
+                break;
             case 'z':
                 handleUndo();
                 break;
@@ -264,9 +265,19 @@ const translatePoints = (origin, points) => {
       };
   }, [badDir])
 
+  const handleRestart = () => {
+    setLastDir("null")
+    setWinState("idle")
+    setAddStack("false")
+    setBadDir("foo")
+    setWinSprite({...levels[level - 1].winSprite})
+    setSprite({...levels[level - 1].sprite})
+    setEnvObjects({...levels[level - 1].envObjects})
+    setStateStack([{lastDir: "null", sprite: {origin: [0,0], points: [[0,0]], branches: {tl: [], t: [], tr: [], b: []}}, envObjects: {grows: grows, blocks: blocks}}])
+  }
 
   const handleUndo = () => {
-    if (stateStack.length > 1) {
+    if (stateStack.length > 2) {
 
         let newSprite = JSON.parse(JSON.stringify(stateStack[stateStack.length - 2].sprite));
         let newEnv = JSON.parse(JSON.stringify(stateStack[stateStack.length - 2].envObjects));
@@ -285,6 +296,7 @@ const translatePoints = (origin, points) => {
   const moveSprite = (dir) => {
     setSprite(prev => {
         // Create a deep copy of your previous state
+        if (dir === "foorefresh") return prev;
         let newSprite = JSON.parse(JSON.stringify(prev));
 
         // Calculate the new position based on the direction
@@ -325,6 +337,7 @@ const translatePoints = (origin, points) => {
                 break;
         }
 
+        console.log(checkValidity(newSprite.points))
         // Check the validity of the new position
         if (checkValidity(newSprite.points)) {
             setEnvObjects(prevEnvObjects => {
@@ -917,6 +930,7 @@ const checkGrowth = (dir, newSprite, currentEnvObjects, triggeredFrom) => {
 }
 
   const checkValidity = (newPoints) => {
+    console.log(newPoints)
     let valid = true;
     newPoints.forEach(point => {
         if (point[0] < 0 || point[0] > GRID_WIDTH) {
@@ -925,7 +939,9 @@ const checkGrowth = (dir, newSprite, currentEnvObjects, triggeredFrom) => {
         if (point[1] < 0 || point[1] > GRID_HEIGHT) {
             valid = false;
         }
+        console.log(envObjects.blocks)
         if (envObjects.blocks.findIndex((index) => index[0] === point[0] && index[1] === point[1]) !== -1){
+            console.log("hi", point)
             valid = false;
         } 
     })
@@ -947,7 +963,7 @@ const checkGrowth = (dir, newSprite, currentEnvObjects, triggeredFrom) => {
   }
 
   const handleSetLevel = (newLevel) => {
-    setLevel(newLevel)
+    setLevel(newLevel);
   }
 
   return (
@@ -963,6 +979,7 @@ const checkGrowth = (dir, newSprite, currentEnvObjects, triggeredFrom) => {
 
         <div style={{display: "flex", flexDirection: "column"}}>
 
+            <p>Z = undo | R = restart | Arrows to move</p>
             <Grid setGridStart={setGridStart}/>
             <div style={{display: "flex", flexDirection: "row"}}>
                 <button onClick={() => handleSetLevel(1)}>level 1</button>
